@@ -1,8 +1,8 @@
+**简体中文** ｜ [English](README_EN.md)
+
 # ATFOpenAdSDK iOS Demo
 
 ATFOpenAdSDK 的 iOS 示例工程与接入文档。本仓库同时包含可直接运行的 Demo App 与完整的 SDK 接入指南。
-
-iOS sample project and integration guide for ATFOpenAdSDK. This repository contains both a runnable demo app and the full integration guide.
 
 ---
 
@@ -18,7 +18,7 @@ iOS sample project and integration guide for ATFOpenAdSDK. This repository conta
 - [8. 日志与调试](#8-日志与调试)
 - [9. 错误处理](#9-错误处理)
 - [10. 常见问题](#10-常见问题)
-- [English Guide](#english-guide)
+- [English Version](README_EN.md)
 
 ---
 
@@ -481,155 +481,6 @@ A：确认 AppID / MediaID / SecretKey / 广告位 ID 均为真实值，且广�
 
 **Q：开屏广告底部区域显示异常？**
 A：`adSize` 的高度需预留底部自定义视图高度，Demo 中为屏幕高度减去 120。
-
----
-
-# English Guide
-
-## 1. Introduction
-
-ATFOpenAdSDK is ATF's iOS advertising SDK. It supports splash, interstitial, rewarded video and feed ads, and can aggregate multiple third-party ad sources through adapters.
-
-This repository provides:
-
-- A runnable demo project: `ATFOpenAdSDKDemo.xcworkspace`
-- Sample code for every ad format under `ATFOpenAdSDKDemo/`
-- A single configuration file for demo parameters: `ATFOpenAdSDKDemo/DemoConfig.h`
-
-| Ad format | Entry point |
-| --- | --- |
-| Splash | `SplashViewController` |
-| Interstitial | `InterstitialViewController` |
-| Rewarded video | `RewardViewController` |
-| Feed (template) | `FeedViewController` |
-| Feed (self-rendering) | `FeedViewSelfRenderController` |
-| Feed (ATF express) | `FeedViewATFExpressController` |
-
-## 2. Requirements
-
-| Item | Requirement |
-| --- | --- |
-| Xcode | 15 or later |
-| iOS | 15.0 or later |
-| CocoaPods | 1.13 or later |
-| Languages | Objective-C and Swift |
-
-## 3. Quick Start
-
-```bash
-git clone git@github.com:atfoenginex/ATFOpenAdSDKDemo.git
-cd ATFOpenAdSDKDemo
-
-# Replace every YOUR_* placeholder in ATFOpenAdSDKDemo/DemoConfig.h first
-
-pod install
-open ATFOpenAdSDKDemo.xcworkspace
-```
-
-The demo ships with placeholder credentials only. Until you replace them, the SDK cannot initialize and ad requests will not be filled.
-
-## 4. Installation
-
-Dependencies are published in the public spec repository [atfoenginex/atfo-specs](https://github.com/atfoenginex/atfo-specs).
-
-```ruby
-source 'https://cdn.cocoapods.org/'
-source 'https://github.com/atfoenginex/atfo-specs.git'
-
-platform :ios, '15.0'
-use_frameworks! :linkage => :static
-
-target 'YourApp' do
-  pod 'ATFOpenAdSDK', '1.3.1.0'
-
-  # Add the adapters you need
-  pod 'ATFOBaiduAdapter', '1.3.0.0'
-  pod 'ATFOGDTAdapter', '1.3.1.0'
-  pod 'ATFOGroMoreAdapter', '1.3.0.0'
-end
-```
-
-## 5. SDK Initialization
-
-```objc
-ATFOAdSDKConfiguration *config = [ATFOAdSDKConfiguration sharedConfiguration];
-config.appID = @"YOUR_APP_ID";
-config.mediaID = @"YOUR_MEDIA_ID";
-config.secretKey = @"YOUR_SECRET_KEY";
-config.environmentType = ATFOEnvironmentDevelopment;
-[ATFOADLogSetting setATFOADOnLineLoggingEnabled:YES];
-
-[ATFOAdSDKManager startWithCompletionHandler:^(BOOL success, NSError * _Nullable error) {
-    if (success) {
-        NSLog(@"SDK initialized");
-    } else {
-        NSLog(@"SDK init failed: %@", error.localizedDescription);
-    }
-}];
-```
-
-## 6. Loading Ads
-
-Every ad format is described by an `ATFOAdSlot`.
-
-### 6.1 Splash
-
-```objc
-ATFOAdSlot *adSlot = [[ATFOAdSlot alloc] init];
-adSlot.slotID = @"YOUR_SPLASH_SLOT_ID";
-adSlot.adSize = CGSizeMake(UIScreen.mainScreen.bounds.size.width,
-                           UIScreen.mainScreen.bounds.size.height - 120);
-adSlot.AdType = ATFOpenSDKAdTypeSplash;
-
-self.splashAd = [[ATFOSplashAd alloc] initWithSlot:adSlot];
-self.splashAd.delegate = self;
-self.splashAd.rootViewController = self;
-[self.splashAd loadAdData];
-[self.splashAd showSplashInRootViewController:self];
-```
-
-### 6.2 Interstitial
-
-```objc
-adSlot.AdType = ATFOpenSDKAdTypeInterstitial;
-self.interstitialAd = [[ATFOInterstitialAd alloc] initWithSlot:adSlot];
-self.interstitialAd.delegate = self;
-[self.interstitialAd loadAdData];
-[self.interstitialAd showInterstitialInRootViewController:self];
-```
-
-### 6.3 Rewarded Video
-
-```objc
-adSlot.AdType = ATFOpenSDKAdTypeRewardVideo;
-self.rewardAd = [[ATFORewardVideoAd alloc] initWithSlot:adSlot];
-self.rewardAd.delegate = self;
-[self.rewardAd loadAdData];
-[self.rewardAd showRewardVideoAdFromRootViewController:self];
-```
-
-Grant rewards only in `atfo_rewardVideoDidRewardEffectiveBy:isEffective:verify:`.
-
-### 6.4 Feed
-
-```objc
-adSlot.AdType = ATFOpenSDKAdTypeFeed;
-self.feedAd = [[ATFOFeedAd alloc] initWithSlot:adSlot];
-self.feedAd.delegate = self;
-self.feedAd.rootViewController = self;
-[self.feedAd loadAdData];
-[self.feedAd render];
-```
-
-For self-rendering feeds implement `atfo_feedBeginRenderBy:with:at:`, build your own view from the provided native ad object, and register the container and clickable views with `registerContainer:clickableViews:`. For server-side templates call `renderWithContainerView:`.
-
-## 7. Info.plist
-
-Add the location usage description, the ATT usage description, the `LSApplicationQueriesSchemes` whitelist for third-party app launches, and an ATS exception if creatives or landing pages use HTTP. See section 7 of the Chinese guide for the exact keys.
-
-## 8. Logging and Troubleshooting
-
-Enable online logging with `[ATFOADLogSetting setATFOADOnLineLoggingEnabled:YES]` and use `ATFOEnvironmentDevelopment` while integrating. If ads are not filled, verify the credentials, the slot ID, the slot-to-ad-type mapping, network connectivity, and that the slot is enabled on the server.
 
 ---
 
