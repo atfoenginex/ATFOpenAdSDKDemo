@@ -100,10 +100,6 @@
                                                     action:@selector(showFeedSelfRenderDemo:)
                                            backgroundColor:[UIColor blackColor]];
   [self.stackView addArrangedSubview:selfRenderButton];
-    UIButton *atfExpressButton = [self createButtonWithTitle:@"🔔 ATF 模板信息流 Demo"
-                                                       action:@selector(showFeedATFExpressDemo:)
-                                              backgroundColor:[UIColor systemIndigoColor]];
-    [self.stackView addArrangedSubview:atfExpressButton];
     UIButton *rewardButton = [self createButtonWithTitle:@"🎬 激励视频广告 Demo"
                                                   action:@selector(showRewardDemo:)
                                          backgroundColor:[UIColor blackColor]];
@@ -187,11 +183,6 @@
 
 - (void)showFeedSelfRenderDemo:(UIButton *) sender {
   FeedViewSelfRenderController *vc = [FeedViewSelfRenderController new];
-  [self.navigationController pushViewController:vc animated:YES];
-}
-
-- (void)showFeedATFExpressDemo:(UIButton *)sender {
-  FeedViewATFExpressController *vc = [FeedViewATFExpressController new];
   [self.navigationController pushViewController:vc animated:YES];
 }
 

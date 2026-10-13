@@ -58,9 +58,6 @@
 // 信息流自渲染广告位 ID
 #define DEMO_FEED_SELFRENDER_SLOT_ID @"YOUR_FEED_SELFRENDER_SLOT_ID"
 
-// ATF 模板渲染信息流广告位 ID（服务端需配置 render_type=atfExpress、style_id=9011）
-#define DEMO_FEED_ATFEXPRESS_SLOT_ID @"YOUR_FEED_ATFEXPRESS_SLOT_ID"
-
 // 信息流广告尺寸
 #define DEMO_FEED_WIDTH ([UIScreen mainScreen].bounds.size.width - 40)
 #define DEMO_FEED_HEIGHT (DEMO_FEED_WIDTH * 114 / 358.0)

@@ -32,9 +32,6 @@
     if ([self isKindOfClass:FeedViewSelfRenderController.class]) {
         return DEMO_FEED_SELFRENDER_SLOT_ID;
     }
-    if ([self isKindOfClass:FeedViewATFExpressController.class]) {
-        return DEMO_FEED_ATFEXPRESS_SLOT_ID;
-    }
     return DEMO_FEED_SLOT_ID;
 }
 
@@ -400,38 +397,6 @@
 
 - (void)dealloc {
   NSLog(@"=====");
-}
-
-@end
-
-@implementation FeedViewATFExpressController
-
-- (void)viewDidLoad {
-  [super viewDidLoad];
-  self.title = @"ATF 模板信息流 Demo";
-  self.statusLabel.text = @"🔔 ATF 模板信息流状态：未加载";
-  self.logTextView.text = @"🎯 请填写服务端配置 render_type=atfExpress、style_id=9011 的信息流广告位 ID。\n";
-}
-
-- (void)renderFeedAd:(UIButton *)sender {
-    [self addLog:@"🎨 开始渲染信息流广告..."];
-    
-    if (!self.feedAd) {
-        [self addLog:@"❌ 请先加载广告再进行渲染"];
-        return;
-    }
-    
-    [self.feedAd renderWithContainerView:self.adContainerView];
-}
-- (void)atfo_feedRenderedBy:(ATFOFeedAd *)feedAd {
-  dispatch_async(dispatch_get_main_queue(), ^{
-    [self addLog:@"🎨 ATF 模板渲染成功！"];
-    self.statusLabel.text = @"🔔 ATF 模板状态：已渲染，正在展示";
-    self.statusLabel.backgroundColor = DEMO_COLOR_SHOWING;
-    self.statusLabel.textColor = [UIColor whiteColor];
-    UIView *placeholder = [self.adContainerView viewWithTag:999];
-    [placeholder removeFromSuperview];
-  });
 }
 
 @end
