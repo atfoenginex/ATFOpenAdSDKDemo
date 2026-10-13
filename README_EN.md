@@ -40,7 +40,6 @@ The demo covers the following ad formats:
 | Rewarded video | `RewardViewController` | Playback and reward callbacks |
 | Feed (template) | `FeedViewController` | Rendered by the SDK template |
 | Feed (self-rendering) | `FeedViewSelfRenderController` | Custom view built by the publisher |
-| Feed (ATF express) | `FeedViewATFExpressController` | Rendered by the server template |
 
 > The demo also includes a custom User-Agent setting, an environment switch, ad validity checks and an on-screen log panel.
 
@@ -84,7 +83,6 @@ Constants to replace in `ATFOpenAdSDKDemo/DemoConfig.h`:
 | `DEMO_REWARD_SLOT_ID` | Rewarded video slot ID |
 | `DEMO_FEED_SLOT_ID` | Feed slot ID |
 | `DEMO_FEED_SELFRENDER_SLOT_ID` | Self-rendering feed slot ID |
-| `DEMO_FEED_ATFEXPRESS_SLOT_ID` | ATF express feed slot ID |
 
 ## 4. Integrating Into Your App
 
@@ -366,29 +364,6 @@ For self-rendering feeds the publisher builds the view. The SDK hands over the c
     [renderView configureWith:adObject];
 }
 ```
-
-### 6.6 Feed (ATF Express Template)
-
-When the server returns an ATF express creative (`render_type=atfExpress`, `style_id=9011`), render it into a container view:
-
-```objc
-// The slot configuration is the same as a regular feed slot,
-// the only difference is the server-side template configuration
-ATFOAdSlot *adSlot = [[ATFOAdSlot alloc] init];
-adSlot.slotID = @"YOUR_FEED_ATFEXPRESS_SLOT_ID";
-adSlot.AdType = ATFOpenSDKAdTypeFeed;
-adSlot.adSize = CGSizeMake(width, height);
-
-self.feedAd = [[ATFOFeedAd alloc] initWithSlot:adSlot];
-self.feedAd.delegate = self;
-self.feedAd.rootViewController = self;
-[self.feedAd loadAdData];
-
-// Render into the container view
-[self.feedAd renderWithContainerView:self.adContainerView];
-```
-
-> The slot must be configured server-side with `render_type=atfExpress` and `style_id=9011`, otherwise no template creative is returned.
 
 ## 7. Permissions and Info.plist
 

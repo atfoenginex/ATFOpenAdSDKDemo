@@ -41,7 +41,6 @@ Demo 内置以下广告能力示例：
 | 激励视频 | `RewardViewController` | 支持播放完成与奖励回调 |
 | 信息流（模板） | `FeedViewController` | SDK 模板渲染 |
 | 信息流（自渲染） | `FeedViewSelfRenderController` | 媒体自定义渲染视图 |
-| ATF 模板信息流 | `FeedViewATFExpressController` | 服务端模板渲染 |
 
 > Demo 还提供自定义 User-Agent、开发/正式环境切换、广告有效性检查与日志面板等辅助能力。
 
@@ -85,7 +84,6 @@ open ATFOpenAdSDKDemo.xcworkspace
 | `DEMO_REWARD_SLOT_ID` | 激励视频广告位 ID |
 | `DEMO_FEED_SLOT_ID` | 信息流广告位 ID |
 | `DEMO_FEED_SELFRENDER_SLOT_ID` | 信息流自渲染广告位 ID |
-| `DEMO_FEED_ATFEXPRESS_SLOT_ID` | ATF 模板信息流广告位 ID |
 
 ## 4. 集成到你的 App
 
@@ -367,28 +365,6 @@ self.feedAd.rootViewController = self;   // 用于广告跳转
     [renderView configureWith:adObject];
 }
 ```
-
-### 6.6 ATF 模板信息流
-
-服务端返回模板信息流素材（`render_type=atfExpress`、`style_id=9011`）时，使用容器视图渲染：
-
-```objc
-// 广告位配置与普通信息流一致，只是广告位在服务端被配置为模板渲染
-ATFOAdSlot *adSlot = [[ATFOAdSlot alloc] init];
-adSlot.slotID = @"YOUR_FEED_ATFEXPRESS_SLOT_ID";
-adSlot.AdType = ATFOpenSDKAdTypeFeed;
-adSlot.adSize = CGSizeMake(width, height);
-
-self.feedAd = [[ATFOFeedAd alloc] initWithSlot:adSlot];
-self.feedAd.delegate = self;
-self.feedAd.rootViewController = self;
-[self.feedAd loadAdData];
-
-// 渲染到容器视图
-[self.feedAd renderWithContainerView:self.adContainerView];
-```
-
-> 广告位需在服务端配置 `render_type=atfExpress`、`style_id=9011`，否则不会返回模板素材。
 
 ## 7. 权限与 Info.plist
 
