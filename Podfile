@@ -20,19 +20,19 @@ target 'ATFOpenAdSDKDemo' do
   pod 'SDWebImage'
 
   # ATF 广告 SDK 核心
-  pod 'ATFOpenAdSDK', '1.3.1.0'
+  pod 'ATFOpenAdSDK', '1.3.2.0'
 
   # 三方广告适配器（按需增删，版本以 atfo-specs 已发布版本为准）
-  pod 'ATFOBaiduAdapter', '1.3.0.0'
-  pod 'ATFOBeiZiAdapter', '1.2.1.0'
-  pod 'ATFOGDTAdapter', '1.3.1.0'
-  pod 'ATFOGroMoreAdapter', '1.3.0.0'
-  pod 'ATFOMeiShuAdapter', '1.2.1.0'
-  pod 'ATFONoahAdapter', '1.2.0.0'
-  pod 'ATFONoahAdapter/UTDID', '1.2.0.0'
-  pod 'ATFOQuMengAdapter', '1.3.0.0'
-  pod 'ATFOSigmobAdapter', '1.3.0.0'
-  pod 'ATFOYoukuAdapter', '1.2.0.0'
+  pod 'ATFOBaiduAdapter', '1.3.2.0'
+  pod 'ATFOBeiZiAdapter', '1.3.2.0'
+  pod 'ATFOGDTAdapter', '1.3.2.0'
+  pod 'ATFOGroMoreAdapter', '1.3.2.0'
+  pod 'ATFOMeiShuAdapter', '1.3.2.0'
+  pod 'ATFONoahAdapter', '1.3.2.0'
+  pod 'ATFONoahAdapter/UTDID', '1.3.2.0'
+  pod 'ATFOQuMengAdapter', '1.3.2.0'
+  pod 'ATFOSigmobAdapter', '1.3.2.0'
+  pod 'ATFOYoukuAdapter', '1.3.2.0'
 end
 
 post_install do |installer|

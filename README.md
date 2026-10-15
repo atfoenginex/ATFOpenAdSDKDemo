@@ -100,19 +100,19 @@ use_frameworks! :linkage => :static
 
 target 'YourApp' do
   # ATF 广告 SDK 核心
-  pod 'ATFOpenAdSDK', '1.3.1.0'
+  pod 'ATFOpenAdSDK', '1.3.2.0'
 
   # 三方广告适配器（按需引入）
-  pod 'ATFOBaiduAdapter', '1.3.0.0'
-  pod 'ATFOBeiZiAdapter', '1.2.1.0'
-  pod 'ATFOGDTAdapter', '1.3.1.0'
-  pod 'ATFOGroMoreAdapter', '1.3.0.0'
-  pod 'ATFOMeiShuAdapter', '1.2.1.0'
-  pod 'ATFONoahAdapter', '1.2.0.0'
-  pod 'ATFONoahAdapter/UTDID', '1.2.0.0'
-  pod 'ATFOQuMengAdapter', '1.3.0.0'
-  pod 'ATFOSigmobAdapter', '1.3.0.0'
-  pod 'ATFOYoukuAdapter', '1.2.0.0'
+  pod 'ATFOBaiduAdapter', '1.3.2.0'
+  pod 'ATFOBeiZiAdapter', '1.3.2.0'
+  pod 'ATFOGDTAdapter', '1.3.2.0'
+  pod 'ATFOGroMoreAdapter', '1.3.2.0'
+  pod 'ATFOMeiShuAdapter', '1.3.2.0'
+  pod 'ATFONoahAdapter', '1.3.2.0'
+  pod 'ATFONoahAdapter/UTDID', '1.3.2.0'
+  pod 'ATFOQuMengAdapter', '1.3.2.0'
+  pod 'ATFOSigmobAdapter', '1.3.2.0'
+  pod 'ATFOYoukuAdapter', '1.3.2.0'
 end
 
 post_install do |installer|
@@ -365,6 +365,17 @@ self.feedAd.rootViewController = self;   // 用于广告跳转
     [renderView configureWith:adObject];
 }
 ```
+
+### 6.6 清除广告位缓存（1.3.2.0 新增）
+
+`ATFOAdSlot` 支持按广告位丢弃内存缓存池中已加载、待展示的广告，下次请求该广告位时会重新拉取：
+
+```objc
+// 丢弃 YOUR_SLOT_ID 已缓存的待展示广告，下次 load 会重新请求
+[ATFOAdSlot clearCacheWithSlotID:@"YOUR_SLOT_ID"];
+```
+
+> 1.3.2.0 其他变更：`ATFOAdVideoInfo` 改为 Swift 实现（类名、`videoURL` / `videoDuration` 属性与 `initWithURL:duration:` 均不变）；`NSString` 上的 `apiSourceID`、`toutiaoSourceID`、`kuaishouSourceID`、`fanweiSourceID` 已下线。
 
 ## 7. 权限与 Info.plist
 

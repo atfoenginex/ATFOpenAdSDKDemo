@@ -99,19 +99,19 @@ use_frameworks! :linkage => :static
 
 target 'YourApp' do
   # ATF ad SDK core
-  pod 'ATFOpenAdSDK', '1.3.1.0'
+  pod 'ATFOpenAdSDK', '1.3.2.0'
 
   # Third-party ad adapters (add only what you need)
-  pod 'ATFOBaiduAdapter', '1.3.0.0'
-  pod 'ATFOBeiZiAdapter', '1.2.1.0'
-  pod 'ATFOGDTAdapter', '1.3.1.0'
-  pod 'ATFOGroMoreAdapter', '1.3.0.0'
-  pod 'ATFOMeiShuAdapter', '1.2.1.0'
-  pod 'ATFONoahAdapter', '1.2.0.0'
-  pod 'ATFONoahAdapter/UTDID', '1.2.0.0'
-  pod 'ATFOQuMengAdapter', '1.3.0.0'
-  pod 'ATFOSigmobAdapter', '1.3.0.0'
-  pod 'ATFOYoukuAdapter', '1.2.0.0'
+  pod 'ATFOBaiduAdapter', '1.3.2.0'
+  pod 'ATFOBeiZiAdapter', '1.3.2.0'
+  pod 'ATFOGDTAdapter', '1.3.2.0'
+  pod 'ATFOGroMoreAdapter', '1.3.2.0'
+  pod 'ATFOMeiShuAdapter', '1.3.2.0'
+  pod 'ATFONoahAdapter', '1.3.2.0'
+  pod 'ATFONoahAdapter/UTDID', '1.3.2.0'
+  pod 'ATFOQuMengAdapter', '1.3.2.0'
+  pod 'ATFOSigmobAdapter', '1.3.2.0'
+  pod 'ATFOYoukuAdapter', '1.3.2.0'
 end
 
 post_install do |installer|
@@ -364,6 +364,17 @@ For self-rendering feeds the publisher builds the view. The SDK hands over the c
     [renderView configureWith:adObject];
 }
 ```
+
+### 6.6 Clearing the Slot Cache (New in 1.3.2.0)
+
+`ATFOAdSlot` can drop the loaded-but-not-yet-shown ads cached for a slot; the next request for that slot fetches fresh ads:
+
+```objc
+// Drop cached ads for YOUR_SLOT_ID; the next load requests again
+[ATFOAdSlot clearCacheWithSlotID:@"YOUR_SLOT_ID"];
+```
+
+> Other 1.3.2.0 changes: `ATFOAdVideoInfo` is now implemented in Swift (same class name, same `videoURL` / `videoDuration` properties and `initWithURL:duration:` initializer); the `NSString` helpers `apiSourceID`, `toutiaoSourceID`, `kuaishouSourceID` and `fanweiSourceID` have been removed.
 
 ## 7. Permissions and Info.plist
 

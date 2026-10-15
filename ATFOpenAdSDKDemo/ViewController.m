@@ -51,7 +51,7 @@
         saplingID = [saplingClass performSelector:@selector(saplingId)];
     }
     versionLabel.text = [NSString stringWithFormat:@"SDK 版本：%@\n测试模式：%@\n idfa: %@\n saplingID: %@",
-                        @"1.2.7.5", DEMO_TEST_MODE ? @"开启" : @"关闭", idfa, saplingID];
+                        @"1.3.2.0", DEMO_TEST_MODE ? @"开启" : @"关闭", idfa, saplingID];
     versionLabel.font = [UIFont systemFontOfSize:14];
     versionLabel.textAlignment = NSTextAlignmentCenter;
     versionLabel.numberOfLines = 0;
