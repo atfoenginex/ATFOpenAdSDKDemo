@@ -307,7 +307,11 @@ self.rewardAd.delegate = self;
                                       verify:(BOOL)verify;
 ```
 
-> 发放奖励请以 `atfo_rewardVideoDidRewardEffectiveBy:isEffective:verify:` 为准。
+> 发放奖励请以 `atfo_rewardVideoDidRewardEffectiveBy:isEffective:verify:` 的 `isEffective` 为准：`isEffective == YES` 表示广告源已确认本次激励有效。
+>
+> `verify` 为预留字段，SDK 当前固定传入 `NO`，不要用它判断是否发放。
+>
+> `atfo_rewardVideoPlayFinishedBy:` 只在视频播放完成时触发，可用于"已看完"的记录与展示，它不代表奖励有效性。
 
 ### 6.4 信息流广告（SDK 模板渲染）
 

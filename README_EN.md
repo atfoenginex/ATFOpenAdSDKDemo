@@ -306,7 +306,11 @@ Callbacks (`ATFOAdRewardVideoDelegate`):
                                       verify:(BOOL)verify;
 ```
 
-> Grant rewards only in `atfo_rewardVideoDidRewardEffectiveBy:isEffective:verify:`.
+> Grant the reward based on `isEffective` in `atfo_rewardVideoDidRewardEffectiveBy:isEffective:verify:`: `isEffective == YES` means the ad source has confirmed the reward for this view.
+>
+> `verify` is a reserved field — the SDK currently always passes `NO`, so do not use it to decide whether to grant.
+>
+> `atfo_rewardVideoPlayFinishedBy:` fires when playback finishes; use it to record or show "watched to the end", not to judge reward validity.
 
 ### 6.4 Feed (SDK Template Rendering)
 
