@@ -99,18 +99,20 @@ use_frameworks! :linkage => :static
 
 target 'YourApp' do
   # ATF ad SDK core
-  pod 'ATFOpenAdSDK', '1.3.2.0'
+  pod 'ATFOpenAdSDK', '1.3.3.0'
 
   # Third-party ad adapters (add only what you need)
-  pod 'ATFOBaiduAdapter', '1.3.2.0'
-  pod 'ATFOBeiZiAdapter', '1.3.2.0'
+  pod 'ATFOAppLovinAdapter', '1.0.0.0'
+  pod 'ATFOBaiduAdapter', '1.3.3.0'
+  pod 'ATFOBeiZiAdapter', '1.3.3.0'
   pod 'ATFOGDTAdapter', '1.3.2.0'
-  pod 'ATFOGroMoreAdapter', '1.3.2.0'
-  pod 'ATFOMeiShuAdapter', '1.3.2.0'
+  pod 'ATFOGoogleAdMobAdapter', '1.3.2.0'
+  pod 'ATFOGroMoreAdapter', '1.3.3.0'
+  pod 'ATFOMeiShuAdapter', '1.3.3.0'
   pod 'ATFONoahAdapter', '1.3.2.0'
   pod 'ATFONoahAdapter/UTDID', '1.3.2.0'
   pod 'ATFOQuMengAdapter', '1.3.2.0'
-  pod 'ATFOSigmobAdapter', '1.3.2.0'
+  pod 'ATFOSigmobAdapter', '1.3.3.0'
   pod 'ATFOYoukuAdapter', '1.3.2.0'
 end
 
@@ -152,6 +154,15 @@ Swift:
 ```swift
 import ATFOpenAdSDK
 ```
+
+### 4.3 Google AdMob and AppLovin MAX
+
+Version 1.3.3.0 adds `ATFOGoogleAdMobAdapter` and `ATFOAppLovinAdapter`. Install them using the Podfile entries above. Both adapters self-register through `+load`, so keep `-ObjC` in the linker flags.
+
+- AdMob supports App Open splash, interstitial, rewarded video and template-rendered feed. Feed ad units must use the `atfExpress` render mode.
+- AppLovin MAX supports App Open splash, interstitial, rewarded video and self-rendered feed. Feed ad units must use `render_type = self`.
+- The new public Objective-C properties are `NSString.applovinSourceID` and `NSString.admobSourceID`; their current values are `applovin` and `admob_test`. The `name` in `sdk_config_list` and the `ad_source` on each ad unit must match these values or the adapter will not be selected.
+- Both adapters honor the `idfa` switch under `sdk_options["ios_privacy"]`. Add the network-specific `Info.plist` entries, including `SKAdNetworkItems`, before integration testing.
 
 ## 5. SDK Initialization
 
@@ -198,6 +209,8 @@ Common `ATFOAdSDKManager` APIs:
 | `+ getAvailableAdapterNames` | Names of the currently registered adapters |
 | `+ clearLocalConfigs` | Clear locally cached configuration |
 
+After initialization, the SDK refreshes remote setting configuration in the foreground every 60 seconds. The host does not need to start a separate timer.
+
 ## 6. Loading Ads
 
 Every ad format is described by an `ATFOAdSlot`:
@@ -208,6 +221,10 @@ adSlot.slotID = @"YOUR_SLOT_ID";                 // slot ID
 adSlot.adSize = CGSizeMake(width, height);       // ad size
 adSlot.AdType = ATFOpenSDKAdTypeSplash;          // ad type
 ```
+
+When the ad service returns `ext.preload_enable = true`, the SDK asynchronously loads the next ad for the same slot after the current ad is shown or the feed is rendered, then stores the completed loader in the cache pool. The setting is per slot and defaults to disabled; the public API is unchanged.
+
+For splash, interstitial and rewarded video, the SDK automatically displays an API ad notice banner when the server-side ad configuration contains `notice` and the creative includes a title and icon. `notice.delay`, `notice.duration`, `notice.vibrate` and `notice.sound` control the display delay, auto-dismiss duration, vibration and sound. Notice banner taps and upward swipes use the normal ad interaction and reporting paths.
 
 ### 6.1 Splash
 

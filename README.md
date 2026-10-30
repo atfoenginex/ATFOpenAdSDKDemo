@@ -100,18 +100,20 @@ use_frameworks! :linkage => :static
 
 target 'YourApp' do
   # ATF 广告 SDK 核心
-  pod 'ATFOpenAdSDK', '1.3.2.0'
+  pod 'ATFOpenAdSDK', '1.3.3.0'
 
   # 三方广告适配器（按需引入）
-  pod 'ATFOBaiduAdapter', '1.3.2.0'
-  pod 'ATFOBeiZiAdapter', '1.3.2.0'
+  pod 'ATFOAppLovinAdapter', '1.0.0.0'
+  pod 'ATFOBaiduAdapter', '1.3.3.0'
+  pod 'ATFOBeiZiAdapter', '1.3.3.0'
   pod 'ATFOGDTAdapter', '1.3.2.0'
-  pod 'ATFOGroMoreAdapter', '1.3.2.0'
-  pod 'ATFOMeiShuAdapter', '1.3.2.0'
+  pod 'ATFOGoogleAdMobAdapter', '1.3.2.0'
+  pod 'ATFOGroMoreAdapter', '1.3.3.0'
+  pod 'ATFOMeiShuAdapter', '1.3.3.0'
   pod 'ATFONoahAdapter', '1.3.2.0'
   pod 'ATFONoahAdapter/UTDID', '1.3.2.0'
   pod 'ATFOQuMengAdapter', '1.3.2.0'
-  pod 'ATFOSigmobAdapter', '1.3.2.0'
+  pod 'ATFOSigmobAdapter', '1.3.3.0'
   pod 'ATFOYoukuAdapter', '1.3.2.0'
 end
 
@@ -153,6 +155,15 @@ Swift：
 ```swift
 import ATFOpenAdSDK
 ```
+
+### 4.3 Google AdMob 与 AppLovin MAX
+
+1.3.3.0 新增 `ATFOGoogleAdMobAdapter` 与 `ATFOAppLovinAdapter`，安装方式如上；适配器通过 `+load` 自动注册，链接参数需保留 `-ObjC`。
+
+- AdMob 支持开屏（App Open）、插屏、激励视频和信息流模板渲染，信息流要求服务端渲染方式为 `atfExpress`。
+- AppLovin MAX 支持开屏（App Open）、插屏、激励视频和信息流自渲染，信息流广告位需配置为 `render_type = self`。
+- 新增 Objective-C 公开属性 `NSString.applovinSourceID` 和 `NSString.admobSourceID`，当前值分别为 `applovin` 和 `admob_test`。服务端 `sdk_config_list` 的 `name` 与广告位 `ad_source` 必须使用相同值，否则适配器不会匹配。
+- 两个适配器都支持 `sdk_options["ios_privacy"]` 下的 `idfa` 开关；还需要按各广告源要求补齐 `SKAdNetworkItems` 等 `Info.plist` 配置。
 
 ## 5. SDK 初始化
 
@@ -199,6 +210,8 @@ config.environmentType = ATFOEnvironmentDevelopment;
 | `+ getAvailableAdapterNames` | 当前已注册的适配器名称 |
 | `+ clearLocalConfigs` | 清除本地缓存的配置 |
 
+SDK 初始化成功后会在前台按 60 秒周期刷新远程 setting 配置；宿主无需额外启动定时任务。
+
 ## 6. 广告接入
 
 所有广告类型都通过 `ATFOAdSlot` 描述广告位：
@@ -209,6 +222,10 @@ adSlot.slotID = @"YOUR_SLOT_ID";                 // 广告位 ID
 adSlot.adSize = CGSizeMake(width, height);       // 广告尺寸
 adSlot.AdType = ATFOpenSDKAdTypeSplash;          // 广告类型
 ```
+
+广告服务返回 `ext.preload_enable = true` 时，SDK 会在当前广告展示或信息流渲染后异步预加载同广告位的下一条广告，并在预加载完成后写入缓存池。该字段按广告位生效，默认关闭，宿主调用方式不变。
+
+开屏、插屏和激励视频的服务端广告配置包含 `notice`，且素材提供标题和图标时，SDK 会自动展示 API 广告通知条。`notice.delay`、`notice.duration`、`notice.vibrate` 和 `notice.sound` 分别控制展示延时、自动关闭时长、震动和提示音；通知条点击或上滑会走广告交互与上报链路。
 
 ### 6.1 开屏广告
 
