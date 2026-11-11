@@ -139,6 +139,8 @@ Then run:
 pod install
 ```
 
+Starting with 1.4.0.0, `ATFOFancyAdapter` is no longer shipped; remove it from an existing Podfile. `ATFOGroMoreAdapter` uses `Ads-CN/CSJMediation-Only` and does not depend on GroMore live components.
+
 ### 4.2 Importing the SDK
 
 Objective-C:
@@ -222,6 +224,12 @@ adSlot.adSize = CGSizeMake(width, height);       // ad size
 adSlot.AdType = ATFOpenSDKAdTypeSplash;          // ad type
 ```
 
+In Swift, `slotID` is now a non-optional string. You can still create an `AdSlot()` and assign it later, or use `AdSlot(slotID:adType:adSize:)`.
+
+The `ATFOAdInfo` passed to load-success callbacks now exposes the read-only industry category properties `adFirstCategory` and `adSecondCategory`. They are currently populated by the GDT adapter and are `nil` for other sources.
+
+Version 1.4.0.0 removes the legacy no-argument splash, interstitial and feed callbacks; use the callbacks that include the ad object. In Swift, delegate failure callbacks now receive `Error` instead of `NSError`; Objective-C integrations continue to use `NSError`.
+
 When the ad service returns `ext.preload_enable = true`, the SDK asynchronously loads the next ad for the same slot after the current ad is shown or the feed is rendered, then stores the completed loader in the cache pool. The setting is per slot and defaults to disabled; the public API is unchanged.
 
 For splash, interstitial and rewarded video, the SDK automatically displays an API ad notice banner when the server-side ad configuration contains `notice` and the creative includes a title and icon. `notice.delay`, `notice.duration`, `notice.vibrate` and `notice.sound` control the display delay, auto-dismiss duration, vibration and sound. Notice banner taps and upward swipes use the normal ad interaction and reporting paths.
@@ -302,6 +310,7 @@ adSlot.adSize = CGSizeMake(UIScreen.mainScreen.bounds.size.width,
 
 self.rewardAd = [[ATFORewardVideoAd alloc] initWithSlot:adSlot];
 self.rewardAd.delegate = self;
+self.rewardAd.userId = @"YOUR_USER_ID"; // Set when server-side reward verification (SSV) is enabled
 [self.rewardAd loadAdData];
 
 // Show
@@ -317,17 +326,17 @@ Callbacks (`ATFOAdRewardVideoDelegate`):
 - (void)atfo_rewardVideoShowFailedBy:(ATFORewardVideoAd *)rewardVideoAd with:(NSError *)error;
 - (void)atfo_rewardVideoClickBy:(ATFORewardVideoAd *)rewardVideoAd;
 - (void)atfo_rewardVideoCloseBy:(ATFORewardVideoAd *)rewardVideoAd;
-- (void)atfo_rewardVideoPlayFinishedBy:(ATFORewardVideoAd *)rewardVideoAd;
-- (void)atfo_rewardVideoDidRewardEffectiveBy:(ATFORewardVideoAd *)rewardVideoAd
-                                 isEffective:(BOOL)isEffective
-                                      verify:(BOOL)verify;
+- (void)atfo_rewardVideoPlayFinishedBy:(ATFORewardVideoAd *)rewardVideoAd
+                                 error:(NSError *)error;
+- (void)atfo_rewardVideoDidRewardBy:(ATFORewardVideoAd *)rewardVideoAd
+                             verify:(BOOL)verify;
 ```
 
-> Grant the reward based on `isEffective` in `atfo_rewardVideoDidRewardEffectiveBy:isEffective:verify:`: `isEffective == YES` means the ad source has confirmed the reward for this view.
+> `atfo_rewardVideoDidRewardBy:verify:` fires when the reward condition is reached. `verify == YES` means server-side reward verification (SSV) succeeded; for SSV-enabled slots, grant the reward only when `verify == YES`.
 >
-> `verify` is a reserved field — the SDK currently always passes `NO`, so do not use it to decide whether to grant.
+> For slots without SSV, `verify` is `NO`, and reward validity is determined by the ad source. `userId` is forwarded as `imp.reward_context.user_key` when requesting the ad, so set it before calling `loadAdData`.
 >
-> `atfo_rewardVideoPlayFinishedBy:` fires when playback finishes; use it to record or show "watched to the end", not to judge reward validity.
+> `atfo_rewardVideoPlayFinishedBy:error:` only indicates that playback finished or ended. It can be used to record or show "watched to the end", but it does not indicate reward validity.
 
 ### 6.4 Feed (SDK Template Rendering)
 

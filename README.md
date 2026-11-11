@@ -140,6 +140,8 @@ end
 pod install
 ```
 
+从 1.4.0.0 起，仓库不再提供 `ATFOFancyAdapter`，已有集成请从 Podfile 移除该适配器。`ATFOGroMoreAdapter` 使用 `Ads-CN/CSJMediation-Only`，不依赖 GroMore 直播组件。
+
 ### 4.2 引入头文件
 
 Objective-C：
@@ -223,6 +225,12 @@ adSlot.adSize = CGSizeMake(width, height);       // 广告尺寸
 adSlot.AdType = ATFOpenSDKAdTypeSplash;          // 广告类型
 ```
 
+Swift 中 `slotID` 已改为非可选字符串，可继续先创建 `AdSlot()` 后赋值，或使用 `AdSlot(slotID:adType:adSize:)` 初始化。
+
+加载成功回调中的 `ATFOAdInfo` 新增行业分类只读属性 `adFirstCategory` 和 `adSecondCategory`，当前由优量汇适配器回填，其它渠道为 `nil`。
+
+1.4.0.0 移除了开屏、插屏和信息流广告的旧无参回调，仅保留带广告对象的回调。Swift delegate 的失败回调参数已由 `NSError` 改为 `Error`；Objective-C 接入仍使用 `NSError`。
+
 广告服务返回 `ext.preload_enable = true` 时，SDK 会在当前广告展示或信息流渲染后异步预加载同广告位的下一条广告，并在预加载完成后写入缓存池。该字段按广告位生效，默认关闭，宿主调用方式不变。
 
 开屏、插屏和激励视频的服务端广告配置包含 `notice`，且素材提供标题和图标时，SDK 会自动展示 API 广告通知条。`notice.delay`、`notice.duration`、`notice.vibrate` 和 `notice.sound` 分别控制展示延时、自动关闭时长、震动和提示音；通知条点击或上滑会走广告交互与上报链路。
@@ -303,6 +311,7 @@ adSlot.adSize = CGSizeMake(UIScreen.mainScreen.bounds.size.width,
 
 self.rewardAd = [[ATFORewardVideoAd alloc] initWithSlot:adSlot];
 self.rewardAd.delegate = self;
+self.rewardAd.userId = @"YOUR_USER_ID"; // 启用服务端奖励校验（SSV）时设置
 [self.rewardAd loadAdData];
 
 // 展示
@@ -318,17 +327,17 @@ self.rewardAd.delegate = self;
 - (void)atfo_rewardVideoShowFailedBy:(ATFORewardVideoAd *)rewardVideoAd with:(NSError *)error;
 - (void)atfo_rewardVideoClickBy:(ATFORewardVideoAd *)rewardVideoAd;
 - (void)atfo_rewardVideoCloseBy:(ATFORewardVideoAd *)rewardVideoAd;
-- (void)atfo_rewardVideoPlayFinishedBy:(ATFORewardVideoAd *)rewardVideoAd;
-- (void)atfo_rewardVideoDidRewardEffectiveBy:(ATFORewardVideoAd *)rewardVideoAd
-                                 isEffective:(BOOL)isEffective
-                                      verify:(BOOL)verify;
+- (void)atfo_rewardVideoPlayFinishedBy:(ATFORewardVideoAd *)rewardVideoAd
+                                 error:(NSError *)error;
+- (void)atfo_rewardVideoDidRewardBy:(ATFORewardVideoAd *)rewardVideoAd
+                             verify:(BOOL)verify;
 ```
 
-> 发放奖励请以 `atfo_rewardVideoDidRewardEffectiveBy:isEffective:verify:` 的 `isEffective` 为准：`isEffective == YES` 表示广告源已确认本次激励有效。
+> 激励达到奖励条件后回调 `atfo_rewardVideoDidRewardBy:verify:`。`verify == YES` 表示服务端奖励校验（SSV）已通过；启用 SSV 的广告位应仅在 `verify == YES` 时发放奖励。
 >
-> `verify` 为预留字段，SDK 当前固定传入 `NO`，不要用它判断是否发放。
+> 未启用 SSV 的广告位，`verify` 为 `NO`，由广告源自身确认奖励有效性。`userId` 会在请求广告时透传到 `imp.reward_context.user_key`，应在调用 `loadAdData` 前设置。
 >
-> `atfo_rewardVideoPlayFinishedBy:` 只在视频播放完成时触发，可用于"已看完"的记录与展示，它不代表奖励有效性。
+> `atfo_rewardVideoPlayFinishedBy:error:` 只表示视频播放完成或结束，可用于"已看完"的记录与展示，不代表奖励有效性。
 
 ### 6.4 信息流广告（SDK 模板渲染）
 
