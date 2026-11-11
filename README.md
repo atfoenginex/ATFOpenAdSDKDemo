@@ -100,21 +100,21 @@ use_frameworks! :linkage => :static
 
 target 'YourApp' do
   # ATF 广告 SDK 核心
-  pod 'ATFOpenAdSDK', '1.3.3.0'
+  pod 'ATFOpenAdSDK', '1.4.0.0'
 
   # 三方广告适配器（按需引入）
-  pod 'ATFOAppLovinAdapter', '1.0.0.0'
-  pod 'ATFOBaiduAdapter', '1.3.3.0'
-  pod 'ATFOBeiZiAdapter', '1.3.3.0'
-  pod 'ATFOGDTAdapter', '1.3.2.0'
-  pod 'ATFOGoogleAdMobAdapter', '1.3.2.0'
-  pod 'ATFOGroMoreAdapter', '1.3.3.0'
-  pod 'ATFOMeiShuAdapter', '1.3.3.0'
-  pod 'ATFONoahAdapter', '1.3.2.0'
-  pod 'ATFONoahAdapter/UTDID', '1.3.2.0'
-  pod 'ATFOQuMengAdapter', '1.3.2.0'
-  pod 'ATFOSigmobAdapter', '1.3.3.0'
-  pod 'ATFOYoukuAdapter', '1.3.2.0'
+  # pod 'ATFOAppLovinAdapter'  # 仅源码接入，尚未发布到 atfo-specs
+  pod 'ATFOBaiduAdapter', '1.4.0.0'
+  pod 'ATFOBeiZiAdapter', '1.4.0.0'
+  pod 'ATFOGDTAdapter', '1.4.0.0'
+  # pod 'ATFOGoogleAdMobAdapter'  # 仅源码接入，尚未发布到 atfo-specs
+  pod 'ATFOGroMoreAdapter', '1.4.0.0'
+  pod 'ATFOMeiShuAdapter', '1.4.0.0'
+  pod 'ATFONoahAdapter', '1.4.0.0'
+  pod 'ATFONoahAdapter/UTDID', '1.4.0.0'
+  pod 'ATFOQuMengAdapter', '1.4.0.0'
+  pod 'ATFOSigmobAdapter', '1.4.0.0'
+  pod 'ATFOYoukuAdapter', '1.4.0.0'
 end
 
 post_install do |installer|
